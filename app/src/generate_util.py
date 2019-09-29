@@ -1,3 +1,4 @@
+import black
 def convertSnackToPascal(snake_str):
     # We capitalize the first letter of each component except the first one
     # with the 'title' method and join them together.

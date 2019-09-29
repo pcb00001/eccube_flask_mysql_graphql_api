@@ -14,5 +14,6 @@ Base = declarative_base()
 Base.metadata.bind = engine  # Bind engine to metadata of the base class
 
 # Create database session object
-db_session = scoped_session(sessionmaker(bind=engine, expire_on_commit=False))
+# autocommit=False => to execute Flush function before perform a commitment
+db_session = scoped_session(sessionmaker(bind=engine, expire_on_commit=False, autocommit=False))
 Base.query = db_session.query_property()  # Used by graphql to execute queries

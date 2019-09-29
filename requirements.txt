@@ -7,3 +7,5 @@ requests
 sqlalchemy
 mysqlclient
 sqlacodegen
+pydevd_pycharm
+CORS

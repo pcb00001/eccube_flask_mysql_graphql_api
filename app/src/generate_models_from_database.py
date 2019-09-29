@@ -152,7 +152,7 @@ def buildForeignKey(referenced_table_name, referenced_column_name):
 
 def outModelFile(table_name, content_model):
     f = open("{0}/model_{1}.py".format(config.model_folder, table_name), "w+")
-    f.write(content_model)
+    f.write(util.black.format_str(content_model, mode=util.black.FileMode()))
     f.close()
 
 
