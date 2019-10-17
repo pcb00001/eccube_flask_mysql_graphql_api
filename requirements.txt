@@ -8,4 +8,5 @@ sqlalchemy
 mysqlclient
 sqlacodegen
 pydevd_pycharm
-CORS
+flask-cors
+graphene-sqlalchemy-filter

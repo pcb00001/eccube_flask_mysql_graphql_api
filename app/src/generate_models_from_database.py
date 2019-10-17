@@ -140,9 +140,9 @@ def buildConstraint(primary_table_name, primary_foreign_key, referenced_table_na
                                                                              referenced_model_name,
                                                                              referenced_primary_key)
     else:
-        referenced_table_name = "parent_" + referenced_table_name
+        referenced_table_name = "children_" + referenced_table_name
 
-    return "        {0} = relationship('Model{1}'{2}{3})".format(referenced_table_name, referenced_model_name,
+    return "        Model{0} = relationship('Model{1}'{2}{3})".format(util.convertSnackToPascal(referenced_table_name), referenced_model_name,
                                                                  primary_join, backref)
 
 
