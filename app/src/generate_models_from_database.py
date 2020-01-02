@@ -114,12 +114,12 @@ def buildModel(table_name, cursor):
 
         if constraint_info is not None:
             model.append("\n")
-            if table_name != constraint_info["referenced_table_name"]:
-                import_packages.append(
-                    "from {2}.model_{0} import Model{1}\n".format(str.lower(constraint_info["referenced_table_name"]),
-                                                                  util.convertSnackToPascal(
-                                                                      constraint_info["referenced_table_name"]),
-                                                                  config.model_folder))
+            # if table_name != constraint_info["referenced_table_name"]:
+            #     import_packages.append(
+            #         "from {2}.model_{0} import Model{1}\n".format(str.lower(constraint_info["referenced_table_name"]),
+            #                                                       util.convertSnackToPascal(
+            #                                                           constraint_info["referenced_table_name"]),
+            #                                                       config.model_folder))
 
             model.append(buildConstraint(table_name, column_name, constraint_info["referenced_table_name"],
                                          constraint_info["referenced_column_name"]))

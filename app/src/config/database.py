@@ -5,7 +5,7 @@ import generate_config as config
 
 # Create database engine
 db_name = config.database['name']
-db_uri = 'mysql://root:root@localhost/{0}'.format(db_name)
+db_uri = 'mysql://root:root@localhost/{0}?charset=utf8mb4'.format(db_name)
 engine = create_engine(db_uri, convert_unicode=True)
 
 # Declarative base model to create database tables and classes

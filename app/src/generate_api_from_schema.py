@@ -22,7 +22,10 @@ query_inherit = ("class Query(graphene.ObjectType,\n\t{}):"
 mutation_inherit = ("class Mutation(graphene.ObjectType,\n\t{}):"
                  "\n\tpass").format(",\n\t".join(mutation_class))
 
+# f.write(util.black.format_str(inspect.cleandoc(
+#     "\n".join(import_packages + [query_inherit] + [mutation_inherit] + ["\nschema = graphene.Schema(query=Query, mutation=Mutation)"])),
+#     mode=util.black.FileMode()))
 f.write(util.black.format_str(inspect.cleandoc(
-    "\n".join(import_packages + [query_inherit] + [mutation_inherit] + ["\nschema = graphene.Schema(query=Query, mutation=Mutation)"])),
+    "\n".join(import_packages + [query_inherit] + ["\nschema = graphene.Schema(query=Query)"])),
     mode=util.black.FileMode()))
 f.close()

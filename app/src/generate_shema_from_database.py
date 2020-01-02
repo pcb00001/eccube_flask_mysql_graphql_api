@@ -64,6 +64,10 @@ def buildInputs(import_packages, model_name, cursor, queries_class, table_name):
         cursor_key_column_usage.execute(generate_cursor.query_constraint.format(column_name, table_name))
         constraint_info = cursor_key_column_usage.fetchone()  # get only one row
 
+        # build count by column
+        queries_class.append(
+            buildQueryCountByColumnName(column_name, convertSqlDataTypeToGrapheneType(data_type), table_name))
+
         # build get by column
         queries_class.append(
             buildQueryAllByColumnName(column_name, convertSqlDataTypeToGrapheneType(data_type), table_name))
@@ -164,10 +168,10 @@ def buildInputs(import_packages, model_name, cursor, queries_class, table_name):
                                                                                         referenced_table_name),
                                                                                     config.schema_folder))
 
-                import_packages.append('from {2}.model_{0} import Model{1}'.format(referenced_table_name,
-                                                                                   util.convertSnackToPascal(
-                                                                                       referenced_table_name),
-                                                                                   config.model_folder))
+                # import_packages.append('from {2}.model_{0} import Model{1}'.format(referenced_table_name,
+                #                                                                    util.convertSnackToPascal(
+                #                                                                        referenced_table_name),
+                #                                                                    config.model_folder))
                 content_attribute.append(
                     '\n\tmodel_{0} = graphene.Field({1}Input)'.format(referenced_table_name, util.convertSnackToPascal(
                         referenced_table_name)))
@@ -190,6 +194,14 @@ def buildMetaNode(model_name):
             interfaces = (graphene.relay.Node,)
     """.format(model_name))
 
+def buildQueryCountByColumnName(input_name, data_type, return_type):
+    return (
+        "\n count_{3}_by_{0} = graphene.Field(graphene.Int, {0}=graphene.{1}())"
+        "\n def resolve_count_{3}_by_{0}(self, info, {0}):"
+        "\n     query = {2}.get_query(info)"
+        "\n     rs = query.filter(Model{2}.{0} == {0}).count()"
+        "\n     return rs"
+    ).format(input_name, data_type, util.convertSnackToPascal(return_type), return_type)
 
 def buildQueryAllByColumnName(input_name, data_type, return_type):
     return (
@@ -572,16 +584,18 @@ def buildSchemaFile(table_name, cursor):
     import_packages = ["from {0}.model_{1} import Model{2}".format(config.model_folder, table_name,
                                                                    model_name)]
     queries_class = ["class Query:"]
-    mutation_class = ["class Mutation:"]
 
     schema_content.append("\n\n" + buildInputs(import_packages, model_name, cursor, queries_class, table_name))
     schema_content.append(buildMetaNode(model_name))
     schema_content.append(buildConnection(model_name))
-    schema_content.append(buildMutationInsert(table_name))
 
-    mutation_class.append("\n\tcreate{0} = Create{0}.Field()".format(model_name))
+    # Todo: implement mutation
+    # mutation_class = ["class Mutation:"]
+    # mutation_class.append("\n\tcreate{0} = Create{0}.Field()".format(model_name))
+    # content = "\n".join(common_import + import_packages + schema_content + queries_class + mutation_class)
+    # schema_content.append(buildMutationInsert(table_name))
+    content = "\n".join(common_import + import_packages + schema_content + queries_class)
 
-    content = "\n".join(common_import + import_packages + schema_content + queries_class + mutation_class)
     return content
 
 
